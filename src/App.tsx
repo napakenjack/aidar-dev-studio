@@ -1,57 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link, Route, Routes, useLocation, useParams } from 'react-router'
 import heroImg from './assets/hero.png'
+import { portfolioItems, type PortfolioItem } from './data/portfolio'
 import './App.css'
 
 const whatsappUrl =
   'https://wa.me/77754015204?text=Здравствуйте!%20Хочу%20обсудить%20разработку%20сайта%2C%20CRM%20или%20Telegram-бота.'
 
 const navItems = [
-  { label: 'Услуги', href: '#services' },
-  { label: 'Работы', href: '#work' },
-  { label: 'Процесс', href: '#process' },
-  { label: 'Контакты', href: '#contact' },
-]
-
-const services = [
-  {
-    eyebrow: '01 / Websites',
-    title: 'Сайты и лендинги',
-    description:
-      'Разрабатываем сайты CRM системы и веб-системы, личного портфолио и бизнеса: структура, адаптив, SEO-база, формы и WhatsApp-заявки.',
-    meta: 'React / Vite / WordPress',
-  },
-  {
-    eyebrow: '02 / Systems',
-    title: 'CRM / ERP интерфейсы',
-    description:
-      'Панели для заявок, клиентов, задач, сотрудников, отчетов и внутренних процессов. Сначала логика, потом UI, потом рабочий продукт.',
-    meta: 'Dashboards / Roles / Reports',
-  },
-  {
-    eyebrow: '03 / Automation',
-    title: 'Telegram / WhatsApp боты',
-    description:
-      'Боты принимают заявки, отвечают на FAQ, проводят квизы, отправляют данные в Google Sheets, CRM или менеджеру.',
-    meta: 'AI / Sheets / CRM API',
-  },
-]
-
-const workItems = [
-  {
-    title: 'Juye CRM для турагентств',
-    type: 'Product UI',
-    description: 'Заявки, туристы, турпакеты, задачи, статусы, туроператоры и менеджерская логика.',
-  },
-  {
-    title: 'Сайт для бизнеса под заявки',
-    type: 'Website',
-    description: 'Главная страница, услуги, CTA, WhatsApp, карта, формы, базовое SEO и адаптив.',
-  },
-  {
-    title: 'AI-бот для онлайн-магазина',
-    type: 'Automation',
-    description: 'FAQ, подбор товара, заявки, таблицы, уведомления и передача горячих лидов.',
-  },
+  { label: 'Работы', href: '/#work' },
+  { label: 'Процесс', href: '/#process' },
+  { label: 'Контакты', href: '/#contact' },
 ]
 
 const processSteps = [
@@ -62,6 +21,25 @@ const processSteps = [
 ]
 
 const stackItems = ['React', 'Vite', 'TypeScript', 'WordPress', 'CRM', 'ERP', 'Telegram Bots', 'AI', 'Google Sheets']
+
+function ScrollRestoration() {
+  const { pathname, hash } = useLocation()
+
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+
+    const timer = window.setTimeout(() => {
+      document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 60)
+
+    return () => window.clearTimeout(timer)
+  }, [pathname, hash])
+
+  return null
+}
 
 function CursorGlow() {
   const glowRef = useRef<HTMLSpanElement>(null)
@@ -139,13 +117,13 @@ function Header() {
 
   return (
     <header className="site-header">
-      <a className="brand" href="#top" aria-label="Aidar.dev">
+      <Link className="brand" to="/#top" aria-label="Aidar.dev" onClick={closeMenu}>
         <span className="brand__mark">A</span>
         <span className="brand__text">
           <strong>Aidar.dev</strong>
           <small>Web / CRM / Bots</small>
         </span>
-      </a>
+      </Link>
 
       <button
         className="menu-button"
@@ -160,12 +138,12 @@ function Header() {
 
       <nav className={isMenuOpen ? 'main-nav main-nav--open' : 'main-nav'}>
         {navItems.map((item) => (
-          <a href={item.href} key={item.href} onClick={closeMenu}>
+          <Link to={item.href} key={item.href} onClick={closeMenu}>
             {item.label}
-          </a>
+          </Link>
         ))}
         <a className="nav-cta" href={whatsappUrl} target="_blank" rel="noreferrer" onClick={closeMenu}>
-          Обсудить проект
+          Заказать проект
         </a>
       </nav>
     </header>
@@ -237,27 +215,29 @@ function HeroSection() {
       <div className="container hero-grid">
         <div className="hero-copy">
           <p className="eyebrow">Independent web developer</p>
-          <h1>Разрабатываем сайты CRM/ERP системы и веб-системы</h1>
+          <h1>Разрабатываем сайты, CRM/ERP системы и веб-системы</h1>
           <p className="hero-text">
             Делаем digital-продукты, которые выглядят дорого, работают и помогают получать заявки:
-            портфолио, лендинги, админ-панели, CRM/ERP, Telegram/WhatsApp-боты и интеграции.
+            <b> iOS/Android</b> приложение, лендинги, админ-панели, <b>CRM/ERP</b>, <b>Telegram/WhatsApp-боты</b> и интеграции.
           </p>
 
           <div className="hero-actions">
             <a className="button button--primary" href={whatsappUrl} target="_blank" rel="noreferrer">
-              Написать в WhatsApp
+              Заказать проект
             </a>
-            <a className="button button--ghost" href="#work">
+            <Link className="button button--ghost" to="/#work">
               Смотреть работы
-            </a>
+            </Link>
           </div>
 
           <div className="hero-proof" aria-label="Преимущества">
             <span>React</span>
             <span>Vue.js</span>
-            <span>Wordpress</span>
+            <span>WordPress</span>
             <span>CRM системы</span>
             <span>ERP системы</span>
+            <span>iOS</span>
+            <span>Android</span>
           </div>
         </div>
 
@@ -279,28 +259,34 @@ function StackMarquee() {
   )
 }
 
-function ServicesSection() {
-  return (
-    <section className="section-pad" id="services">
-      <div className="container section-head section-head--center">
-        <p className="eyebrow">Services</p>
-        <h2>Одна страница может продавать сильнее, если внутри есть стратегия</h2>
-        <p>
-          Сначала упаковываем смысл, потом собираем дизайн и только после этого подключаем техническую логику.
-        </p>
-      </div>
+type WorkCardProps = {
+  item: PortfolioItem
+  index: number
+}
 
-      <div className="container services-grid">
-        {services.map((service) => (
-          <article className="service-card" key={service.title}>
-            <span className="card-eyebrow">{service.eyebrow}</span>
-            <h3>{service.title}</h3>
-            <p>{service.description}</p>
-            <strong>{service.meta}</strong>
-          </article>
-        ))}
+function WorkCard({ item, index }: WorkCardProps) {
+  return (
+    <Link className="work-card" to={`/project/${item.slug}`} aria-label={`Открыть проект: ${item.title}`}>
+      <div className="work-card__media work-card__media--image">
+        <img src={item.image} alt={item.title} loading="lazy" />
+        <span>{item.category}</span>
+        <strong>{String(index + 1).padStart(2, '0')}</strong>
       </div>
-    </section>
+      <div className="work-card__content">
+        <div className="work-card__meta">
+          <span>{item.year}</span>
+          <span>{item.category}</span>
+        </div>
+        <h3>{item.title}</h3>
+        <p>{item.description}</p>
+        <div className="work-tags" aria-label="Технологии и категории">
+          {item.tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+        <span className="work-card__link-hint">Смотреть проект →</span>
+      </div>
+    </Link>
   )
 }
 
@@ -309,27 +295,17 @@ function WorkSection() {
     <section className="section-pad section-soft" id="work">
       <div className="container section-head section-head--split">
         <div>
-          <p className="eyebrow">Selected work</p>
-          <h2>Кейсы и направления, которые можно красиво показать на портфолио</h2>
+          <p className="eyebrow">Сайты, CRM/ERP системы, Telegram/WhatsApp Боты</p>
+          <h2>Нашы проекты</h2>
+          <p>
+            
+          </p>
         </div>
-        <p>
-          Сейчас блок работает как premium-заготовка. Позже сюда можно добавить реальные скриншоты, ссылки и
-          отдельные страницы проектов.
-        </p>
       </div>
 
       <div className="container work-grid">
-        {workItems.map((item, index) => (
-          <article className="work-card" key={item.title}>
-            <div className="work-card__media">
-              <span>{item.type}</span>
-              <strong>{String(index + 1).padStart(2, '0')}</strong>
-            </div>
-            <div className="work-card__content">
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </div>
-          </article>
+        {portfolioItems.map((item, index) => (
+          <WorkCard item={item} index={index} key={item.slug} />
         ))}
       </div>
     </section>
@@ -347,9 +323,9 @@ function ProcessSection() {
             Поэтому я собираю страницу как систему: оффер, доверие, услуги, кейсы, процесс, CTA и путь клиента до
             заявки.
           </p>
-          <a className="text-link" href="#contact">
+          <Link className="text-link" to="/#contact">
             Обсудить задачу →
-          </a>
+          </Link>
         </div>
 
         <ol className="process-list">
@@ -390,12 +366,158 @@ function ContactSection() {
   )
 }
 
+function HomePage() {
+  return (
+    <main>
+      <HeroSection />
+      <StackMarquee />
+      <WorkSection />
+      <ProcessSection />
+      <ContactSection />
+    </main>
+  )
+}
+
+function ProjectDetailPage() {
+  const { slug } = useParams()
+  const project = portfolioItems.find((item) => item.slug === slug)
+
+  if (!project) {
+    return (
+      <main className="project-page project-page--empty">
+        <section className="container project-empty">
+          <p className="eyebrow">404 project</p>
+          <h1>Такой проект не найден</h1>
+          <p>Возможно, ссылка изменилась или проект был удалён из массива portfolioItems.</p>
+          <Link className="button button--primary" to="/#work">
+            Вернуться к работам
+          </Link>
+        </section>
+      </main>
+    )
+  }
+
+  const moreProjects = portfolioItems.filter((item) => item.slug !== project.slug).slice(0, 3)
+
+  return (
+    <main className="project-page">
+      <section className="project-hero">
+        <div className="container project-hero__grid">
+          <div className="project-hero__copy">
+            <Link className="project-back" to="/#work">
+              ← Назад к работам
+            </Link>
+            <p className="eyebrow">{project.category}</p>
+            <h1>{project.title}</h1>
+            <p className="project-lead">{project.headline}</p>
+            <div className="project-tags" aria-label="Технологии и категории проекта">
+              {project.tags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+          </div>
+
+          <aside className="project-brief" aria-label="Информация о проекте">
+            <div>
+              <span>Год</span>
+              <strong>{project.year}</strong>
+            </div>
+            <div>
+              <span>Роль</span>
+              <strong>{project.role}</strong>
+            </div>
+            <div>
+              <span>Формат</span>
+              <strong>{project.duration}</strong>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section className="project-showcase">
+        <div className="container project-showcase__frame">
+          <img src={project.image} alt={project.title} />
+        </div>
+      </section>
+
+      <section className="section-pad project-story-section">
+        <div className="container project-story-grid">
+          <article className="project-story-card project-story-card--large">
+            <span>01 / Задача</span>
+            <h2>Что нужно было решить</h2>
+            <p>{project.challenge}</p>
+          </article>
+          <article className="project-story-card">
+            <span>02 / Решение</span>
+            <h3>Как оформлена логика</h3>
+            <p>{project.solution}</p>
+          </article>
+          <article className="project-story-card">
+            <span>03 / Результат</span>
+            <h3>Что получает бизнес</h3>
+            <p>{project.result}</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="project-gallery-section">
+        <div className="container section-head section-head--split">
+          <div>
+            <p className="eyebrow">Project visuals</p>
+            <h2>Визуальная подача проекта</h2>
+            <p>
+              Сюда можно добавить реальные скриншоты, мокапы, мобильные экраны или изображения результата. Просто
+              замени пути в поле <code>gallery</code> у нужного проекта.
+            </p>
+          </div>
+        </div>
+
+        <div className="container project-gallery-grid">
+          {project.gallery.map((image, index) => (
+            <figure key={`${project.slug}-gallery-${image}`}>
+              <img src={image} alt={`${project.title} — изображение ${index + 1}`} loading="lazy" />
+              <figcaption>{String(index + 1).padStart(2, '0')}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-pad project-next-section">
+        <div className="container project-next-box">
+          <div>
+            <p className="eyebrow">Next step</p>
+            <h2>Хотите похожий проект?</h2>
+            <p>
+              Можно начать с красивой страницы, а потом расширить проект до CRM/ERP, каталога, личного кабинета или
+              Telegram-бота.
+            </p>
+          </div>
+          <div className="contact-actions">
+            <a className="button button--primary" href={whatsappUrl} target="_blank" rel="noreferrer">
+              Обсудить в WhatsApp
+            </a>
+            <Link className="button button--ghost" to="/#work">
+              Все работы
+            </Link>
+          </div>
+        </div>
+
+        <div className="container related-projects">
+          {moreProjects.map((item, index) => (
+            <WorkCard item={item} index={index} key={item.slug} />
+          ))}
+        </div>
+      </section>
+    </main>
+  )
+}
+
 function Footer() {
   return (
     <footer className="site-footer">
       <div className="container footer-grid">
         <p>© {new Date().getFullYear()} Aidar.dev — websites, CRM/ERP, bots.</p>
-        <a href="#top">Наверх ↑</a>
+        <Link to="/#top">Наверх ↑</Link>
       </div>
     </footer>
   )
@@ -404,16 +526,14 @@ function Footer() {
 function App() {
   return (
     <>
+      <ScrollRestoration />
       <CursorGlow />
       <Header />
-      <main>
-        <HeroSection />
-        <StackMarquee />
-        <ServicesSection />
-        <WorkSection />
-        <ProcessSection />
-        <ContactSection />
-      </main>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/project/:slug" element={<ProjectDetailPage />} />
+        <Route path="*" element={<HomePage />} />
+      </Routes>
       <Footer />
     </>
   )
